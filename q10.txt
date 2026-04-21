@@ -52,4 +52,4 @@ Execution Summary:
 -----------------------------
 - Workflow triggers on push
 - Installs Python and dependencies
-- Runs test cases automatically
+- Runs test cases automatically.
