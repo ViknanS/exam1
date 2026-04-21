@@ -39,4 +39,4 @@ Execution Summary:
 -----------------------------
 - Monolithic app means all logic in a single file
 - Flask handles routes and responses
-- Application runs on local server
+- Application runs on local server.
