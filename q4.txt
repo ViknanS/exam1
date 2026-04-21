@@ -54,8 +54,16 @@ DOCKER_PASSWORD = your dockerhub password
 -----------------------------
 5. Push Code to GitHub
 -----------------------------
+these should be run in terminal :
+---------------------
+mkdir YOUR_FOLDER_NAME
+cd YOUR_FOLDER_NAME
+
+git init
+git remote add origin https://github.com/USERNAME/REPOSITORY.git
 git add .
 git commit -m "Added CI pipeline"
+git push -u origin main
 git push
 
 -----------------------------
