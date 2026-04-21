@@ -6,62 +6,220 @@ Q7: Create a GitHub Actions pipeline to automatically build and push a Docker im
 app.py
 Dockerfile
 requirements.txt
-
------------------------------
-2. Create Workflow File
------------------------------
-Path:
 .github/workflows/docker.yml
 
------------------------------
-3. GitHub Actions Code
------------------------------
+## app.py
+
+from flask import Flask
+
+app = Flask(**name**)
+
+@app.route('/')
+def home():
+return "Docker CI/CD Pipeline Working!"
+
+if **name** == '**main**':
+app.run(host='0.0.0.0', port=5000)
+--------
+
+## requirements.txt
+
+flask
+-----------
+
+## Dockerfile
+
+FROM python:3.10
+
+WORKDIR /app
+
+COPY . .
+
+RUN pip install -r requirements.txt
+
+CMD ["python", "app.py"]
+
+---------
+
+3. GITHUB ACTIONS WORKFLOW
+
+---------
+
+File Path:
+.github/workflows/docker.yml
+
+## Code:
+
 name: Docker CI Pipeline
 
 on:
-  push:
-    branches: [ "main" ]
+push:
+branches: ["main"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+build:
+runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+```
+steps:
+- name: Checkout Code
+  uses: actions/checkout@v3
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+- name: Login to Docker Hub
+  uses: docker/login-action@v2
+  with:
+    username: ${{ secrets.DOCKER_USERNAME }}
+    password: ${{ secrets.DOCKER_TOKEN }}
 
-    - name: Build Docker Image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp .
+- name: Build Docker Image
+  run: docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp .
 
-    - name: Push Docker Image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/myapp
+- name: Push Docker Image
+  run: docker push ${{ secrets.DOCKER_USERNAME }}/myapp
+```
 
------------------------------
-4. Add Secrets in GitHub
------------------------------
-Go to:
-GitHub → Settings → Secrets → Actions
+-------------
 
-Add:
-DOCKER_USERNAME = your username
-DOCKER_PASSWORD = your password
+4. CREATE DOCKER HUB ACCESS TOKEN
 
------------------------------
-5. Push Code
------------------------------
+---
+
+Steps:
+
+1. Login to Docker Hub
+2. Go to Account Settings
+3. Click Security
+4. Click "New Access Token"
+5. Name: github-actions
+6. Copy the generated token
+
+NOTE:
+
+* Do NOT use your password
+* Always use access token for security
+
+---
+
+5. CREATE NEW GITHUB REPOSITORY
+
+---
+
+Steps:
+
+1. Go to GitHub
+2. Click "New Repository"
+3. Name: exam1 (or any name)
+4. Do NOT initialize with README
+5. Click Create
+
+6. ADD SECRETS IN GITHUB
+
+---
+
+Steps:
+
+1. Open your GitHub repository
+2. Go to Settings
+3. Click "Secrets and variables" → Actions
+4. Click "New repository secret"
+
+Add the following:
+
+DOCKER_USERNAME = your_dockerhub_username
+DOCKER_TOKEN = your_access_token
+
+
+---
+
+7. TERMINAL COMMANDS TO PUSH CODE
+
+---
+
+## Step 1: Create folder
+
+mkdir ageesh
+cd ageesh
+git init
+
+## Step 2: Add remote repository
+
+git remote add origin https://github.com/YOUR_USERNAME/repo__
+git branch -M main
+
+## Step 3: Add files and commit
+
 git add .
-git commit -m "Added GitHub Actions pipeline"
-git push
+git commit -m "Added Docker CI pipeline"
 
------------------------------
-Execution Summary:
------------------------------
-- Pipeline triggers on push
-- Builds Docker image
-- Pushes image to Docker Hub automatically
+## Step 4: Pull (if error occurs)
+
+git pull origin main --rebase
+
+## Step 5: Push code
+
+git push origin main
+
+---
+
+8. EXECUTION PROCESS
+
+---
+
+When you push code:
+
+1. GitHub Actions automatically triggers
+2. Workflow runs on ubuntu-latest
+3. Code is checked out
+4. Docker login happens using secrets
+5. Docker image is built
+6. Image is pushed to Docker Hub
+
+---
+
+9. VERIFY OUTPUT
+
+---
+
+1. Go to GitHub repository
+
+2. Click "Actions" tab
+
+3. Check pipeline status (should be green)
+
+4. Go to Docker Hub
+
+5. Check repository:
+   https://hub.docker.com/r/YOUR_USERNAME/myapp
+
+---
+
+10. RUN DOCKER IMAGE LOCALLY (OPTIONAL)
+
+---
+
+## Commands:
+
+docker pull YOUR_USERNAME/myapp
+docker run -p 5000:5000 YOUR_USERNAME/myapp
+
+## Open browser:
+
+http://localhost:5000
+
+---
+
+11. FINAL SUMMARY
+
+---
+
+* GitHub Actions is used for CI/CD automation
+* Trigger: push to main branch
+* Docker image is built using Dockerfile
+* Image is pushed securely using Docker token
+* Secrets are used to protect credentials
+* Fully automated pipeline from code push to deployment
+
+---
+
+## END OF ANSWER
+
