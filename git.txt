@@ -124,3 +124,4 @@ IMPORTANT NOTES
 - File name: ci.yml
 - Dockerfile must be in root
 - Secrets names must match exactly
+.
